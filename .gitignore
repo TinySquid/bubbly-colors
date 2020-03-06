@@ -106,4 +106,5 @@ dist
 /client/build
 
 # package manager
-.lock
+yarn.lock
+package-json.lock
