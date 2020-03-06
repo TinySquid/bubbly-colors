@@ -1,29 +1,28 @@
-exports.up = function (knex) {
-  return knex.schema
-    .createTable('users', function (users) {
-      users.increments();
-      users
-        .string('username')
-        .notNullable()
-        .unique();
-      users
-        .string('password')
-        .notNullable();
-    })
-    .createTable('colors', function (colors) {
-      colors.increments();
-      colors
-        .string('color')
-        .notNullable();
-      colors
-        .string('hex')
-        .notNullable();
-      colors
-        .int('user_id')
-        .notNullable();
-    })
+exports.up = function(knex) {
+	return knex.schema
+		.createTable("users", function(users) {
+			users.increments();
+			users
+				.string("username")
+				.notNullable()
+				.unique();
+			users.string("password").notNullable();
+		})
+		.createTable("colors", function(colors) {
+			colors.increments();
+			colors.string("color").notNullable();
+			colors.string("hex").notNullable();
+			colors
+				.integer("user_id")
+				.unsigned()
+				.notNullable()
+				.references("id")
+				.inTable("users")
+				.onUpdate("CASCADE")
+				.onDelete("CASCADE");
+		});
 };
 
-exports.down = function (knex) {
-  return knex.schema.dropTableIfExists('users').dropTableIfExists('colors');
+exports.down = function(knex) {
+	return knex.schema.dropTableIfExists("users").dropTableIfExists("colors");
 };
