@@ -1,21 +1,28 @@
+require("dotenv").config();
+
+const base = {
+	client: "pg",
+	connection: null,
+	useNullAsDefault: true,
+	migrations: {
+		directory: "./database/migrations",
+	},
+	seeds: {
+		directory: "./database/seeds",
+	},
+};
+
 module.exports = {
-  development: {
-    client: 'sqlite3',
-    useNullAsDefault: true,
-    connection: {
-      filename: './data/data.db3',
-    },
-    pool: {
-      afterCreate: (conn, done) => {
-        conn.run('PRAGMA foreign_keys = ON', done);
-      },
-    },
-    migrations: {
-      directory: './data/migrations',
-      tableName: 'knex_migrations',
-    },
-    seeds: {
-      directory: './data/seeds',
-    },
-  },
+	development: {
+		...base,
+		connection: process.env.DATABASE_URL_DEV,
+	},
+	testing: {
+		...base,
+		connection: process.env.DATABASE_URL_TEST,
+	},
+	production: {
+		...base,
+		connection: process.env.DATABASE_URL,
+	},
 };
