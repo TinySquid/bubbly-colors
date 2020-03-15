@@ -1,12 +1,23 @@
 # BubblyColors
 
-Users can Signup/Login,
-View their dashboard where they can see their bubbles, edit bubble colors, add colors, remove colors.
+[![Netlify Status](https://api.netlify.com/api/v1/badges/ef767c32-f8c9-457a-9736-3608e40e08a3/deploy-status)](https://app.netlify.com/sites/bubbly-colors/deploys)
 
-## Notable Server Features
+A toy full-stack application built using a React frontend and Node/Express backend with Postgres as the database.
 
-1. helmet for better security.
-2. JWT for user authentication | authorization.
-3. User account persistence via postgres database.
-4. Bubble colors associated to individual user.
-5. bcrypt so all passwords stored in database are hashed.
+- User account signup / login
+- Personal "bubbles" feature with the ability for users to create, view, edit and delete
+- JWT for endpoint authentication
+- bcrypt for password hashing
+
+# Frontend
+
+- React
+- Axios
+
+# Backend
+
+- Node
+- Express
+- Knex
+- PostgreSQL
+- JWT authenticaiton
