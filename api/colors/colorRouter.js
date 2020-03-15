@@ -1,9 +1,9 @@
-const router = require('express').Router();
+const router = require("express").Router();
 
-const colorDB = require('./dbColors');
+const Colors = require("../../database/models/colorModel");
 
-const authenticator = require('../users/authenticator');
-const getDefaultColors = require('../../defaultColors');
+const authenticator = require("../users/authenticator");
+const defaultColors = require("../../defaultColors");
 
 //All color routes require authentication.
 router.use(authenticator);
@@ -12,47 +12,47 @@ router.use(authenticator);
 router.get("/", (req, res) => {
   const id = req.userId;
 
-  colorDB.getByUserId(id)
-    .then(colors => {
+  Colors.getByUserId(id)
+    .then((colors) => {
       if (colors.length < 1) {
-        colorDB.insert(getDefaultColors(id))
+        Colors.insert(defaultColors(id))
           .then(() => {
-            colorDB.getByUserId(id)
-              .then(colors => {
+            Colors.getByUserId(id)
+              .then((colors) => {
                 res.status(200).json({
                   token: req.token,
-                  colors: colors
+                  colors: colors,
                 });
               })
-              .catch(error => {
-                res.status(500).json({ message: "Could not get default colors", error: error });
+              .catch((error) => {
+                res.status(500).json({ message: "Could not get default colors", error: error.data });
               });
           })
-          .catch(error => {
-            res.status(500).json({ message: "Could not set default colors", error: error });
+          .catch((error) => {
+            res.status(500).json({ message: "Could not set default colors", error: error.data });
           });
       } else {
         res.status(200).json({
           token: req.token,
-          colors: colors
+          colors: colors,
         });
       }
     })
-    .catch(error => {
+    .catch((error) => {
       res.status(500).json({ message: "Could not get colors from database" });
     });
 });
 
 //POST /colors - Add new color
 router.post("/", validateColor, (req, res) => {
-  colorDB.insert({ ...req.body, user_id: req.userId })
-    .then(color => {
+  Colors.insert({ ...req.body, user_id: req.userId })
+    .then((colorId) => {
       res.status(201).json({
         token: req.token,
-        color: color
+        colorId: colorId,
       });
     })
-    .catch(error => {
+    .catch((error) => {
       res.status(500).json({ message: "Could not add color to the database", error: error });
     });
 });
@@ -61,14 +61,14 @@ router.post("/", validateColor, (req, res) => {
 router.put("/:id", validateColor, (req, res) => {
   const id = req.params.id;
 
-  colorDB.update(id, req.body)
-    .then(color => {
+  Colors.update(id, req.body)
+    .then((color) => {
       res.status(200).json({
         token: req.token,
-        color: color
+        color: color,
       });
     })
-    .catch(error => {
+    .catch((error) => {
       res.status(500).json({ message: "Could not update color info", error: error });
     });
 });
@@ -77,34 +77,33 @@ router.put("/:id", validateColor, (req, res) => {
 router.delete("/:id", validateColorId, (req, res) => {
   const id = req.params.id;
 
-  colorDB.remove(id, req.userId)
-    .then(didDelete => {
+  Colors.remove(id, req.userId)
+    .then((didDelete) => {
       if (didDelete) {
         res.status(200).json({ token: req.token });
       } else {
         res.status(404).json({ message: "Color not found" });
       }
     })
-    .catch(error => {
+    .catch((error) => {
       res.status(500).json({ message: "Could not delete color", error: error });
     });
 });
-
 
 //MIDDLEWARE
 //Validate that a valid color ID has been given.
 function validateColorId(req, res, next) {
   const id = req.params.id;
-  colorDB.getById(id)
-    .then(color => {
+  Colors.getById(id)
+    .then((color) => {
       if (color) {
         next();
       } else {
         res.status(404).json({ message: "Specified color id not found" });
       }
     })
-    .catch(error => {
-      res.status(500).json({ message: "Could not get color by id", error: error })
+    .catch((error) => {
+      res.status(500).json({ message: "Could not get color by id", error: error });
     });
 }
 

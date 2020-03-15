@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from 'react-router-dom';
+import { useHistory } from "react-router-dom";
 import { axiosWithAuth } from "./axiosWithAuth";
-import { base_url } from './base_url';
+import { base_url } from "./base_url";
 
 import Bubbles from "./Bubbles";
 import ColorList from "./ColorList";
@@ -12,26 +12,25 @@ const BubblePage = () => {
   const history = useHistory();
 
   const logout = () => {
-    sessionStorage.removeItem('token');
-    history.push('/');
-  }
+    sessionStorage.removeItem("token");
+    history.push("/");
+  };
 
   const reorderColors = () => {
     setRefresh(!refresh);
-  }
+  };
 
   useEffect(() => {
     axiosWithAuth()
       .get(`${base_url}/api/colors`)
-      .then(response => {
-        // console.log(response);
+      .then((response) => {
         sessionStorage.setItem("token", response.data.token);
         setColorList(response.data.colors);
       })
-      .catch(error => console.log(error))
+      .catch((error) => console.log(error));
   }, []);
 
-  if (!colorList) return <div>Loading color data...</div>
+  if (!colorList) return <div>Loading color data...</div>;
 
   return (
     <>
