@@ -13,6 +13,7 @@ A toy full-stack application built using a React frontend and Node/Express backe
 
 - React
 - Axios
+- Sass
 
 # Backend
 
