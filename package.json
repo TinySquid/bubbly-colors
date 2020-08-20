@@ -23,7 +23,7 @@
   "homepage": "https://github.com/TinySquid/node-api4-project#readme",
   "dependencies": {
     "cross-env": "^7.0.2",
-    "bcrypt": "^3.0.7",
+    "bcrypt": "^5.0.0",
     "cors": "^2.8.4",
     "dotenv": "^8.2.0",
     "express": "^4.16.2",
